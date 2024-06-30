@@ -1,0 +1,15 @@
+.logo {
+    max-width: 45%;
+    margin-top: 2%;
+}
+
+.user-icon {
+    float: right;
+    margin-top: 2%;
+}
+
+@media (width >= 900px) {
+    .user-icon {
+        height: 3rem;
+    }
+}
