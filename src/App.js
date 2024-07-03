@@ -1,14 +1,15 @@
-import Header from './Header.js'
-import Input from './Input.js'
-import Posts from './Posts.js'
-
+import Home from './Home';
+import CreatePost from "./CreatePost";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
   return (
       <div>
-          <Header />
-          <h1>Blog</h1>
-          <Input />
-          <Posts />
+          <Router>
+              <Routes>
+                  <Route path="/" element={<Home/>}/>
+                  <Route path="/create" element={<CreatePost/>}/>
+              </Routes>
+          </Router>
       </div>
   );
 }
