@@ -1,11 +1,13 @@
 import Header from './Header.js'
-import ReactQuill from "react-quill";
+import ReactQuill, {Quill} from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState, useMemo, useRef } from "react";
 import { collection, setDoc, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "./firebase.js"
-
+import  ImageResize   from "quill-image-resize";
+window.Quill = ReactQuill;
+Quill.register('modules/imageResize', ImageResize);
 export default function CreatePost(){
     const [value, setValue] = useState('');
     const docRef = doc(db, "posts", "2");
@@ -20,7 +22,6 @@ export default function CreatePost(){
     }
 
     const  uploadToStorage =  (image) => {
-        //TODO: Upload selected image to firebase and get downloadURL
         const imageRef = ref(storage, image.name + new Date().getTime());
         // let imageURL = null;
         uploadBytesResumable(imageRef, image).then(
@@ -58,8 +59,17 @@ export default function CreatePost(){
 
             handlers: {
                 image: handleImage
-            }
-        }
+            },
+
+        },
+            imageResize: {
+                handleStyles: {
+                    backgroundColor: 'black',
+                    border: 'none',
+                    color: 'white',
+                },
+                modules: ['Resize'],
+            },
     }), [])
 
       const formats = [
@@ -70,6 +80,7 @@ export default function CreatePost(){
         ]
 
     const quillRef = useRef(null);
+
 
     return(
         <div>
