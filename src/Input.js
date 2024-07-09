@@ -1,6 +1,6 @@
 import './Input.css';
 export default function Input(){
     return (
-        <input type="text"/>
+        <input className="mainInput" type="text"/>
     );
 }

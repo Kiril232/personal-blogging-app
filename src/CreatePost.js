@@ -2,23 +2,31 @@ import Header from './Header.js'
 import ReactQuill, {Quill} from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState, useMemo, useRef } from "react";
-import { collection, setDoc, doc } from "firebase/firestore";
+import { collection, addDoc, doc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "./firebase.js"
 import  ImageResize   from "quill-image-resize";
+import { useNavigate } from "react-router-dom";
 window.Quill = ReactQuill;
 Quill.register('modules/imageResize', ImageResize);
 export default function CreatePost(){
-    const [value, setValue] = useState('');
-    const docRef = doc(db, "posts", "2");
-    const documentData = {
-        title: "fourth-post",
-        date: new Date(),
-        content: value,
-        coverImage: "imageURL"
-    }
-    const handleClick = async () => {
-        const newDoc = await setDoc(docRef, documentData);
+    const [coverImg, setCoverImg] = useState(null);
+    const [post, setPost] = useState({
+        title: "",
+        content: "",
+        category: "",
+        date: new Date().toLocaleDateString(),
+        coverImage: ""
+
+    });
+    const navigate = useNavigate();
+    const docRef = collection(db, "posts");
+    const handleSubmit = async (e) => {
+        //TODO: UPLOAD POST TO FIRESTORE
+        e.preventDefault();
+        console.log(post);
+        const newDoc = await addDoc(docRef, post);
+        navigate("/");
     }
 
     const  uploadToStorage =  (image) => {
@@ -57,9 +65,9 @@ export default function CreatePost(){
                 ['clean'],
             ],
 
-            handlers: {
-                image: handleImage
-            },
+            // handlers: {
+            //     image: handleImage
+            // },
 
         },
             imageResize: {
@@ -81,15 +89,46 @@ export default function CreatePost(){
 
     const quillRef = useRef(null);
 
+    function handleCoverInput (e) {
+        //TODO: UPLOAD IMAGE TO FIREBASE STORAGE AND PROVIDE PREVIEW, AS WELL AS PROGRESS BAR
+        console.log("Slikata e fatena na delo");
+        const image = e.target.files[0];
+        const imageRef = ref(storage, image.name + new Date().getTime());
+        // let imageURL = null;
+        uploadBytesResumable(imageRef, image).then(
+            () => {
+                getDownloadURL(imageRef).then(
+                    (url) => {
+                        alert("image uploaded")
+                        setPost({...post, coverImage: url});
+                    })
+            }
+        )
+
+    }
+
 
     return(
         <div>
             <Header />
-            <h1>Create post route</h1>
-            <ReactQuill ref={quillRef}  formats={formats} modules={modules} theme="snow" value={value} onChange={setValue}/>
-            <button onClick={handleClick}>Get doc</button>
+            <h1>Create Post route</h1>
+            <form onSubmit={handleSubmit}>
+                <h2>Title:</h2>
+                <input  onChange={(e)=>{setPost({...post, title: e.target.value})}} className="formInput" type="text" placeholder="Enter title..." />
+                <h2>Category:</h2>
+                <input  onChange={(e)=>{setPost({...post, category: e.target.value})}} className="formInput" type="text" placeholder="Enter category..." />
+                <h2>Cover image:</h2>
+                <input onInput={handleCoverInput} type="file" />
+                <img src={post.coverImage} width="200" height="200" />
+                <hr />
+                <ReactQuill ref={quillRef} formats={formats} modules={modules} theme="snow" value={post.content}
+                                           onChange={(HTMLcontent) => {
+                                               setPost({...post, content: HTMLcontent});
+                                           }} placeholder="Enter blog content here..."/>
+                <button type="submit">Submit</button>
+            </form>
             <hr />
-            <div className="ql-editor" dangerouslySetInnerHTML={{__html: value}} />
+            <div className="ql-editor ql-container" dangerouslySetInnerHTML={{__html: post.content}} />
         </div>
     );
 }
