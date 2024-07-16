@@ -18,7 +18,8 @@ export default function CreatePost(){
         title: "",
         content: "",
         category: "",
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(),
+        slug: ""
     });
     const navigate = useNavigate();
     const docRef = collection(db, "posts");
@@ -28,6 +29,8 @@ export default function CreatePost(){
     const [coverURL, setCoverURL] = useState("");
 
     const coverImg = useRef(null);
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if(!coverImg){
@@ -145,6 +148,10 @@ export default function CreatePost(){
     }
 
 
+    function kebab(str){
+        return str.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "").replace(/\s/g, "-");
+    }
+
     return(
         <div>
             <Header/>
@@ -152,14 +159,15 @@ export default function CreatePost(){
             <form onSubmit={handleSubmit}>
                 <h2>Title:</h2>
                 <input onChange={(e) => {
-                    setPost({...post, title: e.target.value})
+                    setPost({...post, title: e.target.value, slug: kebab(e.target.value)})
                 }} className="formInput" type="text" placeholder="Enter title..."/>
+                <p>{post.slug}</p>
                 <h2>Category:</h2>
                 <input onChange={(e) => {
                     setPost({...post, category: e.target.value})
                 }} className="formInput" type="text" placeholder="Enter category..."/>
                 <h2>Cover image:</h2>
-                {coverImageInProgress ? <ProgressBar progress={progress} /> : <input onInput={handleCoverInput} type="file"/>}
+                <input onInput={handleCoverInput} type="file"/>
                 <img src={coverURL} width="200" height="200" alt="cover image"/>
                 <hr/>
                 {imageInProgress && <ProgressBar progress={progress} />}
