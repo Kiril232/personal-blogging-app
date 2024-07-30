@@ -1,6 +1,8 @@
 import './Input.css';
-export default function Input(){
+export default function Input( {handleChange} ){
     return (
-        <input className="mainInput" type="text"/>
+        <input onChange={(e) => {
+            handleChange(e.target.value);
+        }} className="mainInput" type="text"/>
     );
 }

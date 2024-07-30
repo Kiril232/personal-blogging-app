@@ -19,6 +19,6 @@
     }
 
     .pic:nth-child(2n+1) {
-        margin-right: 9%;
+        margin-left: 9%;
     }
 }

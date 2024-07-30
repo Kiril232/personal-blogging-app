@@ -1,22 +1,19 @@
+import { db, storage, auth } from "./firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import Header from "./Header.js";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useState, useMemo, useRef, useEffect } from "react";
-import {
-  collection,
-  addDoc,
-  doc,
-  query,
-  getCountFromServer,
-  where,
-} from "firebase/firestore";
+import { useMemo } from "react";
+import { addDoc, updateDoc, doc, getCountFromServer } from "firebase/firestore";
 import {
   ref,
+  deleteObject,
   uploadBytes,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-import { db, storage, auth } from "./firebase.js";
 import ImageResize from "quill-image-resize";
 import { useNavigate } from "react-router-dom";
 import ProgressBar from "./ProgressBar";
@@ -25,24 +22,20 @@ import { onAuthStateChanged } from "firebase/auth";
 window.Quill = ReactQuill;
 Quill.register("modules/imageResize", ImageResize);
 
-export default function CreatePost() {
-  const [post, setPost] = useState({
-    title: "",
-    content: "",
-    category: "",
-    date: new Date().toLocaleDateString(),
-    slug: "",
-  });
+export default function BlogPost() {
+  const [post, setPost] = useState({});
+  let { slug } = useParams();
   const navigate = useNavigate();
-  const docRef = collection(db, "posts");
   const [coverImageInProgress, setCoverImageInProgress] = useState(false);
   const [imageInProgress, setImageInProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [coverURL, setCoverURL] = useState("");
-  const [user, setUser] = useState({});
+  const [postId, setPostId] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-
+  const [user, setUser] = useState({});
   const coverImg = useRef(null);
+  let docRef;
+  const quillRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currUser) => {
@@ -60,14 +53,52 @@ export default function CreatePost() {
       }
     });
 
+    const fetchData = async () => {
+      const q = query(collection(db, "posts"), where("slug", "==", slug));
+      const doc = await getDocs(q);
+      setPost(doc.docs[0].data());
+      // console.log("POST:");
+      // console.log(doc.docs[0].data());
+      setPostId(doc.docs[0].id);
+      setCoverURL(doc.docs[0].data().coverImage);
+      //   docRef = collection(db, "posts", doc.docs[0].id);
+    };
+
+    fetchData();
+
     return () => unsubscribe();
   }, []);
 
   const handleSubmit = async (e) => {
+    console.log(post);
     e.preventDefault();
-    if (!coverImg) {
+    if (!coverImg.current) {
+      console.log("UPDATING WITHOUT COVER IMAGE");
+      updateDoc(doc(db, "posts", postId), {
+        category: post.category,
+        content: post.content,
+        slug: post.slug,
+        title: post.title,
+      }).then(() => {
+        navigate("/post/" + post.slug);
+      });
       return;
     }
+    console.log("UPDATING WITH COVER IMAGE");
+    //delete the old cover image https://firebasestorage.googleapis.com/v0/b/personal-blog-2332.appspot.com/o/Screenshot%202024-06-19%20232719.png1720953543527?alt=media&token=9d3c4d84-1a1b-4953-a47f-04ad231779ef
+
+    const oldCoverURL = post.coverImage
+      .substring(77, post.coverImage.indexOf("?", 77))
+      .replace(/%20/g, " ");
+    const oldCoverRef = ref(storage, oldCoverURL);
+    deleteObject(oldCoverRef)
+      .then(() => {
+        console.log("Deleted the old cover image from storage successfully.");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
     const q = query(
       collection(db, "categories"),
       where("category", "==", post.category)
@@ -95,7 +126,13 @@ export default function CreatePost() {
       //handle successful finish
       () => {
         getDownloadURL(imageRef).then((url) => {
-          addDoc(docRef, { ...post, coverImage: url }).then(() => {
+          updateDoc(doc(db, "posts", postId), {
+            category: post.category,
+            coverImage: url,
+            content: post.content,
+            slug: post.slug,
+            title: post.title,
+          }).then(() => {
             navigate("/post/" + post.slug);
           });
         });
@@ -192,9 +229,8 @@ export default function CreatePost() {
     "indent",
     "link",
     "image",
+    "width",
   ];
-
-  const quillRef = useRef(null);
 
   function handleCoverInput(e) {
     console.log(coverURL);
@@ -223,7 +259,18 @@ export default function CreatePost() {
     return (
       <div>
         <Header />
-        <h1>Create Post route</h1>
+        <button
+          onClick={() => {
+            console.log(post);
+            const oldCoverURL = post.coverImage
+              .substring(77, post.coverImage.indexOf("?", 77))
+              .replace(/%20/g, " ");
+            console.log(oldCoverURL);
+          }}
+        >
+          log the post state
+        </button>
+        <h1>Edit Post route</h1>
         <form onSubmit={handleSubmit}>
           <h2>Title:</h2>
           <input
@@ -237,10 +284,12 @@ export default function CreatePost() {
             className="formInput"
             type="text"
             placeholder="Enter title..."
+            value={post.title}
           />
           <p>{post.slug}</p>
           <h2>Category:</h2>
           <input
+            value={post.category}
             onChange={(e) => {
               setPost({ ...post, category: e.target.value });
             }}
@@ -255,12 +304,15 @@ export default function CreatePost() {
           {imageInProgress && <ProgressBar progress={progress} />}
           <ReactQuill
             ref={quillRef}
+            value={post.content}
             formats={formats}
             modules={modules}
             theme="snow"
-            value={post.content}
             onChange={(HTMLcontent) => {
-              setPost({ ...post, content: HTMLcontent });
+              if (post.content) {
+                console.log(post);
+                setPost({ ...post, content: HTMLcontent });
+              }
             }}
             placeholder="Enter blog content here..."
           />
