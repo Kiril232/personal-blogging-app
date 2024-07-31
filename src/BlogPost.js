@@ -7,10 +7,13 @@ import {
   getDocs,
   getCountFromServer,
   deleteDoc,
+  addDoc,
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
+import Header from "./Header";
+import Comments from "./Comments.js";
 
 export default function BlogPost() {
   const post = useRef(null);
@@ -21,6 +24,7 @@ export default function BlogPost() {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState({});
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currUser) => {
@@ -66,8 +70,22 @@ export default function BlogPost() {
       });
   };
 
+  const handleComment = async () => {
+    addDoc(collection(db, "comments"), {
+      content: comment,
+      post: slug,
+      date: new Date().toUTCString(),
+      user: user.displayName,
+      userPhoto: user.photoURL,
+    }).then(() => {
+      window.location.reload();
+    });
+  };
+
   return (
     <div>
+      <Header />
+      <hr />
       <h1>{postContent.title}</h1>
       {isAdmin && <button onClick={handleClick}>Edit post</button>}
       {isAdmin && <button onClick={handleDelete}>Delete post</button>}
@@ -75,6 +93,19 @@ export default function BlogPost() {
         className="ql-editor ql-container"
         dangerouslySetInnerHTML={{ __html: postContent.content }}
       />
+      <hr />
+      <textarea
+        placeholder="Leave a comment..."
+        onChange={(e) => {
+          setComment(e.target.value);
+        }}
+      />
+      <button onClick={handleComment}>Post comment</button>
+      <Comments slug={slug} />
+      <div className="comment"></div>
+      <div className="comment"></div>
+      <div className="comment"></div>
+      <div className="comment"></div>
     </div>
   );
 }
