@@ -1,20 +1,4 @@
-import { useState, useEffect } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "./firebase.js";
-
-export default function Comments({ slug }) {
-  const [comments, setComments] = useState([]);
-
-  useEffect(() => {
-    async function fetchComments() {
-      const q = query(collection(db, "comments"), where("post", "==", slug));
-      const commentsSnapshot = await getDocs(q);
-      setComments(commentsSnapshot.docs);
-    }
-
-    fetchComments();
-  }, []);
-
+export default function Comments({ comments }) {
   const commentPhotoStyle = {
     width: "20px",
     height: "20px",

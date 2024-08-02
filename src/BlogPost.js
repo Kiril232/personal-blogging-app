@@ -25,6 +25,7 @@ export default function BlogPost() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState({});
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currUser) => {
@@ -50,7 +51,14 @@ export default function BlogPost() {
       setPostId(post.current.docs[0].id);
     };
 
+    async function fetchComments() {
+      const q = query(collection(db, "comments"), where("post", "==", slug));
+      const commentsSnapshot = await getDocs(q);
+      setComments(commentsSnapshot.docs);
+    }
+
     fetchData();
+    fetchComments();
 
     return () => unsubscribe();
   }, []);
@@ -68,6 +76,10 @@ export default function BlogPost() {
       .catch((err) => {
         console.error(err);
       });
+
+    comments.forEach((comment) => {
+      deleteDoc(doc(db, "comments", comment.id));
+    });
   };
 
   const handleComment = async () => {
@@ -101,11 +113,7 @@ export default function BlogPost() {
         }}
       />
       <button onClick={handleComment}>Post comment</button>
-      <Comments slug={slug} />
-      <div className="comment"></div>
-      <div className="comment"></div>
-      <div className="comment"></div>
-      <div className="comment"></div>
+      <Comments slug={slug} comments={comments} />
     </div>
   );
 }
