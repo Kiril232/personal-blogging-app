@@ -22,7 +22,7 @@ import { onAuthStateChanged } from "firebase/auth";
 window.Quill = ReactQuill;
 Quill.register("modules/imageResize", ImageResize);
 
-export default function BlogPost() {
+export default function EditPost({ user, isAdmin }) {
   const [post, setPost] = useState({});
   let { slug } = useParams();
   const navigate = useNavigate();
@@ -31,28 +31,11 @@ export default function BlogPost() {
   const [progress, setProgress] = useState(0);
   const [coverURL, setCoverURL] = useState("");
   const [postId, setPostId] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [user, setUser] = useState({});
   const coverImg = useRef(null);
   let docRef;
   const quillRef = useRef(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currUser) => {
-      setUser(currUser);
-      if (user) {
-        const q2 = query(
-          collection(db, "admins"),
-          where("uid", "==", auth.currentUser.uid)
-        );
-        const adminSnapshot = await getCountFromServer(q2);
-        console.log("admin-count: " + adminSnapshot.data().count);
-        if (adminSnapshot.data().count === 1) {
-          setIsAdmin(true);
-        }
-      }
-    });
-
     const fetchData = async () => {
       const q = query(collection(db, "posts"), where("slug", "==", slug));
       const doc = await getDocs(q);
@@ -65,8 +48,6 @@ export default function BlogPost() {
     };
 
     fetchData();
-
-    return () => unsubscribe();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -197,7 +178,7 @@ export default function BlogPost() {
             { indent: "-1" },
             { indent: "+1" },
           ],
-          ["link", "image"],
+          ["link", "image", "video"],
           ["clean"],
         ],
 
@@ -230,6 +211,7 @@ export default function BlogPost() {
     "link",
     "image",
     "width",
+    "video",
   ];
 
   function handleCoverInput(e) {
@@ -258,71 +240,77 @@ export default function BlogPost() {
   } else {
     return (
       <div>
-        <Header />
-        <button
-          onClick={() => {
-            console.log(post);
-            const oldCoverURL = post.coverImage
-              .substring(77, post.coverImage.indexOf("?", 77))
-              .replace(/%20/g, " ");
-            console.log(oldCoverURL);
-          }}
-        >
-          log the post state
-        </button>
-        <h1>Edit Post route</h1>
-        <form onSubmit={handleSubmit}>
-          <h2>Title:</h2>
-          <input
-            onChange={(e) => {
-              setPost({
-                ...post,
-                title: e.target.value,
-                slug: kebab(e.target.value),
-              });
+        <Header user={user} />
+        <div className="create-post-container">
+          {/* <button
+            onClick={() => {
+              console.log(post);
+              const oldCoverURL = post.coverImage
+                .substring(77, post.coverImage.indexOf("?", 77))
+                .replace(/%20/g, " ");
+              console.log(oldCoverURL);
             }}
-            className="formInput"
-            type="text"
-            placeholder="Enter title..."
-            value={post.title}
-          />
-          <p>{post.slug}</p>
-          <h2>Category:</h2>
-          <input
-            value={post.category}
-            onChange={(e) => {
-              setPost({ ...post, category: e.target.value });
-            }}
-            className="formInput"
-            type="text"
-            placeholder="Enter category..."
-          />
-          <h2>Cover image:</h2>
-          <input onInput={handleCoverInput} type="file" />
-          <img src={coverURL} width="200" height="200" alt="cover image" />
+          >
+            log the post state
+          </button> */}
+          <h1>Edit Post </h1>
+          <form onSubmit={handleSubmit}>
+            <div className="form-container">
+              <h2>Title:</h2>
+              <input
+                onChange={(e) => {
+                  setPost({
+                    ...post,
+                    title: e.target.value,
+                    slug: kebab(e.target.value),
+                  });
+                }}
+                className="formInput"
+                type="text"
+                placeholder="Enter title..."
+                value={post.title}
+              />
+              <p>{post.slug}</p>
+              <h2>Category:</h2>
+              <input
+                value={post.category}
+                onChange={(e) => {
+                  setPost({ ...post, category: e.target.value });
+                }}
+                className="formInput"
+                type="text"
+                placeholder="Enter category..."
+              />
+              <h2>Cover image:</h2>
+              <input onInput={handleCoverInput} type="file" />
+              <img src={coverURL} width="200" height="200" alt="cover image" />
+            </div>
+            <hr />
+            {imageInProgress && <ProgressBar progress={progress} />}
+            <ReactQuill
+              ref={quillRef}
+              value={post.content}
+              formats={formats}
+              modules={modules}
+              theme="snow"
+              onChange={(HTMLcontent) => {
+                if (post.content) {
+                  console.log(post);
+                  setPost({ ...post, content: HTMLcontent });
+                }
+              }}
+              placeholder="Enter blog content here..."
+            />
+            <button className="submit-button" type="submit">
+              Submit
+            </button>
+          </form>
           <hr />
-          {imageInProgress && <ProgressBar progress={progress} />}
-          <ReactQuill
-            ref={quillRef}
-            value={post.content}
-            formats={formats}
-            modules={modules}
-            theme="snow"
-            onChange={(HTMLcontent) => {
-              if (post.content) {
-                console.log(post);
-                setPost({ ...post, content: HTMLcontent });
-              }
-            }}
-            placeholder="Enter blog content here..."
+          <div
+            className="ql-editor ql-container"
+            dangerouslySetInnerHTML={{ __html: post.content }}
           />
-          <button type="submit">Submit</button>
-        </form>
-        <hr />
-        <div
-          className="ql-editor ql-container"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        </div>
       </div>
     );
   }

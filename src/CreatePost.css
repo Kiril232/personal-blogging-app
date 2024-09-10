@@ -1,0 +1,62 @@
+.quill {
+  margin: 10px 0;
+}
+
+.quill iframe {
+  pointer-events: none;
+}
+
+.ql-container .ql-editor h1,
+.ql-container .ql-editor h2,
+.ql-container .ql-editor h3,
+.ql-container .ql-editor h4,
+.ql-container .ql-editor h5,
+.ql-container .ql-editor h6 {
+  /* word-wrap:break-word; */
+  overflow-wrap: anywhere;
+}
+
+.editor-view {
+  margin: 10px 0 10px 0;
+  font-size: 13px;
+}
+
+.editor-view h1 {
+  overflow-wrap: anywhere;
+  font-size: 2em;
+}
+
+.form-container {
+  /* border: solid red 1px; */
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.form-container h2 {
+  margin-bottom: 0.5rem;
+  color: #363737;
+}
+
+.create-post-container {
+  width: 68vw;
+  margin: 0 auto;
+}
+
+form .submit-button {
+  all: unset;
+  margin-right: 1%;
+  border-radius: 5px;
+  border-width: 1px;
+  height: 2.6em;
+  padding: 0 1em 0 1em;
+  background-color: green;
+  border-color: green;
+  font-weight: bold;
+  color: white;
+  margin-left: 0;
+  margin-bottom: 1rem;
+}
+
+.submit-button:hover {
+  cursor: pointer;
+}

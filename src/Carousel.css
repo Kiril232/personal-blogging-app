@@ -1,0 +1,144 @@
+.carousel {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  width: 100%;
+  height: 60vh;
+  /* border: solid red 1px; */
+  text-align: center;
+  margin-bottom: 5%;
+  background-color: #e1e5e5;
+  border-radius: 5px;
+  position: relative;
+  border: solid lightgray 1px;
+}
+
+.carousel-content-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 250ms ease;
+}
+
+.carousel img {
+  width: 65vh;
+  height: 55vh;
+  object-fit: cover;
+  border-radius: 10px;
+  float: left;
+  margin-left: 4rem;
+  margin-top: 1rem;
+}
+
+.right-button,
+.left-button {
+  position: absolute;
+  top: 50%;
+  height: 2rem;
+  width: 2rem;
+  z-index: 1;
+  border-radius: 50%;
+  font-size: 4rem;
+  background-color: transparent;
+  border: none;
+  color: #363737;
+  transition: transform 250ms ease;
+}
+
+.left-button:hover {
+  cursor: pointer;
+  transform: translateX(-5px);
+}
+
+.right-button:hover {
+  cursor: pointer;
+  transform: translateX(5px);
+}
+
+.right-button {
+  right: 2rem;
+  top: 11rem;
+}
+
+.left-button {
+  left: -0.5rem;
+  top: 11rem;
+}
+
+.carousel-content {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  flex-grow: 1;
+  max-width: 68vw;
+}
+
+.carousel p {
+  /* float: right; */
+  margin: 0px;
+  margin-top: 5px;
+  font-size: 1.1rem;
+  font-weight: 380;
+  word-spacing: 0.1mm;
+  text-align: justify;
+  overflow-wrap: anywhere;
+}
+
+.carousel h2 {
+  /* float: left; */
+  margin: 0px;
+}
+
+.carousel a {
+  text-decoration: none;
+  color: #363737;
+  font-size: 1.8rem;
+}
+
+.carousel-link {
+  display: inline-block;
+  /* float: left; */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.carousel h6 {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: grey;
+  font-weight: 600;
+  margin: 0px;
+  margin-top: 5px;
+}
+
+.carousel-text {
+  width: 35%;
+  /* border: solid black 1px; */
+  float: left;
+  margin-left: 4rem;
+  margin-top: 17vh;
+}
+
+.arrow-icon {
+  height: 4rem;
+  width: 4rem;
+}
+
+.carousel-content:hover {
+  cursor: pointer;
+}
+
+.carousel-content:hover .post-icons {
+  opacity: 1;
+}
+
+.carousel-content .post-icons {
+  margin-top: 10px;
+}
+
+.carousel-content .count {
+  margin-bottom: 5px;
+  margin-left: 5px;
+}

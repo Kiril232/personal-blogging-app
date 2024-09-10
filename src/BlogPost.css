@@ -1,0 +1,82 @@
+.title-container {
+  /* border: solid red 1px; */
+  overflow: hidden;
+}
+
+.title-container h1 {
+  font-size: 2.5rem;
+}
+
+h6 {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: grey;
+  font-weight: 600;
+  margin: 0px;
+  text-align: left;
+  margin-top: 5px;
+}
+
+.post-info-container {
+  margin-top: 1rem;
+  /* display: flex; */
+}
+
+.post-logo {
+  float: left;
+  width: 7rem;
+  margin-right: 1rem;
+}
+
+.blogpost-container {
+  width: 68vw;
+  margin: 20px auto 0 auto;
+}
+
+.delete-icon,
+.edit-icon {
+  float: right;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  border: 0;
+  background-color: transparent;
+}
+
+.delete-icon:hover,
+.edit-icon:hover {
+  color: gray;
+  cursor: pointer;
+}
+
+.blogpost-container .likes {
+  margin-top: 5px;
+  height: 3rem;
+  width: 4rem;
+  float: left;
+}
+
+.blogpost-container .likes h6,
+.blogpost-container .comments h6 {
+  font-size: 1rem;
+  margin-left: 0.3rem;
+}
+
+.blogpost-container .likes .like-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.blogpost-container .comments {
+  margin-top: 5px;
+  height: 3rem;
+  width: 4rem;
+}
+
+.blogpost-container .comments .comment-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.liked {
+  color: green;
+}

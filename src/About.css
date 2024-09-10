@@ -1,0 +1,18 @@
+.about-content-container {
+  width: 68vw;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  /* background-color: lightgray; */
+  flex: 1;
+}
+
+.about-container {
+  min-height: 100vh;
+  /* border: solid red 5px; */
+  display: flex;
+  flex-direction: column;
+}
+
+.about-container h2 {
+  font-size: 2rem;
+}

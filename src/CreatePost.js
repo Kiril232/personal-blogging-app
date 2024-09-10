@@ -17,21 +17,25 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { db, storage, auth } from "./firebase.js";
-import ImageResize from "quill-image-resize";
+// import ImageResize from "quill-image-resize";
+import VideoResize from "quill-video-resize-module";
 import { useNavigate } from "react-router-dom";
 import ProgressBar from "./ProgressBar";
-import { onAuthStateChanged } from "firebase/auth";
+import "./CreatePost.css";
 
-window.Quill = ReactQuill;
-Quill.register("modules/imageResize", ImageResize);
+// window.Quill = Quill;
+// Quill.register("modules/imageResize", ImageResize);
+Quill.register("modules/videoResize", VideoResize);
 
-export default function CreatePost() {
+export default function CreatePost({ user, isAdmin }) {
   const [post, setPost] = useState({
     title: "",
     content: "",
     category: "",
     date: new Date().toLocaleDateString(),
     slug: "",
+    likes: 0,
+    comments: 0,
   });
   const navigate = useNavigate();
   const docRef = collection(db, "posts");
@@ -39,29 +43,8 @@ export default function CreatePost() {
   const [imageInProgress, setImageInProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [coverURL, setCoverURL] = useState("");
-  const [user, setUser] = useState({});
-  const [isAdmin, setIsAdmin] = useState(false);
 
   const coverImg = useRef(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currUser) => {
-      setUser(currUser);
-      if (user) {
-        const q2 = query(
-          collection(db, "admins"),
-          where("uid", "==", auth.currentUser.uid)
-        );
-        const adminSnapshot = await getCountFromServer(q2);
-        console.log("admin-count: " + adminSnapshot.data().count);
-        if (adminSnapshot.data().count === 1) {
-          setIsAdmin(true);
-        }
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,6 +88,7 @@ export default function CreatePost() {
 
   const uploadToStorage = (image) => {
     setImageInProgress(true);
+    console.log(Quill.imports);
     const imageRef = ref(storage, image.name + new Date().getTime());
     // let imageURL = null;
     const uploadTask = uploadBytesResumable(imageRef, image);
@@ -160,7 +144,7 @@ export default function CreatePost() {
             { indent: "-1" },
             { indent: "+1" },
           ],
-          ["link", "image"],
+          ["link", "image", "video"],
           ["clean"],
         ],
 
@@ -169,12 +153,20 @@ export default function CreatePost() {
         },
       },
       imageResize: {
-        handleStyles: {
-          backgroundColor: "black",
-          border: "none",
-          color: "white",
-        },
-        modules: ["Resize"],
+        // handleStyles: {
+        //   backgroundColor: "black",
+        //   border: "none",
+        //   color: "white",
+        // },
+        // modules: ["Resize"],
+      },
+      videoResize: {
+        // handleStyles: {
+        //   backgroundColor: "black",
+        //   border: "none",
+        //   color: "white",
+        // },
+        // modules: ["Resize"],
       },
     }),
     []
@@ -192,6 +184,7 @@ export default function CreatePost() {
     "indent",
     "link",
     "image",
+    "video",
   ];
 
   const quillRef = useRef(null);
@@ -222,55 +215,62 @@ export default function CreatePost() {
   } else {
     return (
       <div>
-        <Header />
-        <h1>Create Post route</h1>
-        <form onSubmit={handleSubmit}>
-          <h2>Title:</h2>
-          <input
-            onChange={(e) => {
-              setPost({
-                ...post,
-                title: e.target.value,
-                slug: kebab(e.target.value),
-              });
-            }}
-            className="formInput"
-            type="text"
-            placeholder="Enter title..."
-          />
-          <p>{post.slug}</p>
-          <h2>Category:</h2>
-          <input
-            onChange={(e) => {
-              setPost({ ...post, category: e.target.value });
-            }}
-            className="formInput"
-            type="text"
-            placeholder="Enter category..."
-          />
-          <h2>Cover image:</h2>
-          <input onInput={handleCoverInput} type="file" />
-          <img src={coverURL} width="200" height="200" alt="cover image" />
+        <Header user={user} />
+        <div className="create-post-container">
+          <h1>Create Post</h1>
+          <form onSubmit={handleSubmit}>
+            <div className="form-container">
+              <h2>Title:</h2>
+              <input
+                onChange={(e) => {
+                  setPost({
+                    ...post,
+                    title: e.target.value,
+                    slug: kebab(e.target.value),
+                  });
+                }}
+                className="formInput"
+                type="text"
+                placeholder="Enter title..."
+              />
+              <p>{post.slug}</p>
+              <h2>Category:</h2>
+              <input
+                onChange={(e) => {
+                  setPost({ ...post, category: e.target.value });
+                }}
+                className="formInput"
+                type="text"
+                placeholder="Enter category..."
+              />
+              <h2>Cover image:</h2>
+              <input onInput={handleCoverInput} type="file" />
+              <img src={coverURL} width="200" height="200" alt="cover image" />
+            </div>
+            <hr />
+            {imageInProgress && <ProgressBar progress={progress} />}
+            <ReactQuill
+              ref={quillRef}
+              formats={formats}
+              modules={modules}
+              theme="snow"
+              value={post.content}
+              onChange={(HTMLcontent) => {
+                setPost({ ...post, content: HTMLcontent });
+              }}
+              placeholder="Enter blog content here..."
+              className="editor"
+            />
+            <button className="submit-button" type="submit">
+              Submit
+            </button>
+          </form>
           <hr />
-          {imageInProgress && <ProgressBar progress={progress} />}
-          <ReactQuill
-            ref={quillRef}
-            formats={formats}
-            modules={modules}
-            theme="snow"
-            value={post.content}
-            onChange={(HTMLcontent) => {
-              setPost({ ...post, content: HTMLcontent });
-            }}
-            placeholder="Enter blog content here..."
+          <div
+            className="ql-editor ql-container editor-view"
+            dangerouslySetInnerHTML={{ __html: post.content }}
           />
-          <button type="submit">Submit</button>
-        </form>
-        <hr />
-        <div
-          className="ql-editor ql-container"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        </div>
       </div>
     );
   }

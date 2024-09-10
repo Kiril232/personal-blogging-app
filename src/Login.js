@@ -1,20 +1,29 @@
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
+import { ReactComponent as LogoIpsum } from "./logoipsum.svg";
+
 import { useState, useEffect } from "react";
 import Header from "./Header";
+import Footer from "./Footer";
+import Register from "./Register";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { setDoc, doc } from "firebase/firestore";
+import "./Login.css";
 
 export default function Login() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+  const [registerInProgress, setRegisterInProgress] = useState(false);
   const [user, setUser] = useState({});
+  const [hasAccount, setHasAccount] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     console.log("Use effect called.");
@@ -25,14 +34,21 @@ export default function Login() {
     return () => unsubscribe();
   }, []);
 
-  const register = async () => {
+  const register = async (event) => {
     try {
-      const user = await createUserWithEmailAndPassword(
+      event.preventDefault();
+      await createUserWithEmailAndPassword(
         auth,
         registerEmail,
         registerPassword
-      );
-      console.log(user);
+      ).then((newUser) => {
+        setDoc(doc(db, "users", newUser.user.uid), {
+          email: newUser.user.email,
+          liked: [],
+        });
+
+        setRegisterInProgress(true);
+      });
     } catch (err) {
       console.log(err.message);
     }
@@ -42,8 +58,9 @@ export default function Login() {
     await signOut(auth);
   };
 
-  const login = async () => {
+  const login = async (event) => {
     try {
+      event.preventDefault();
       const user = await signInWithEmailAndPassword(
         auth,
         loginEmail,
@@ -55,39 +72,102 @@ export default function Login() {
     }
   };
 
+  if (registerInProgress) {
+    return (
+      <div className="auth-container">
+        <Header />
+        <Register />
+        <Footer />
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className="auth-container">
       <Header />
-      <h2>Register:</h2>
-      <input
-        placeholder="E-mail"
-        onChange={(e) => {
-          setRegisterEmail(e.target.value);
-        }}
-      />
-      <input
-        placeholder="Password"
-        onChange={(e) => {
-          setRegisterPassword(e.target.value);
-        }}
-      />
-      <button onClick={register}>Create user</button>
-      <h2>Login:</h2>
-      <input
-        placeholder="E-mail"
-        onChange={(e) => {
-          setLoginEmail(e.target.value);
-        }}
-      />
-      <input
-        placeholder="Password"
-        onChange={(e) => {
-          setLoginPassword(e.target.value);
-        }}
-      />
-      <button onClick={login}>Log in</button>
-      <h2>Hello, {user?.email}</h2>
-      <button onClick={logout}>Sign out</button>
+      <div className="auth-content-container">
+        {hasAccount ? (
+          <div className="register-container">
+            <LogoIpsum className="logo" />
+            <h2>Welcome to Pragma!</h2>
+            <p>If you have an account, enter your details to sign in:</p>
+            <form onSubmit={login}>
+              <input
+                className="login-input"
+                placeholder="E-mail"
+                onChange={(e) => {
+                  setLoginEmail(e.target.value);
+                }}
+              />
+              <input
+                type="password"
+                className="login-input"
+                placeholder="Password"
+                onChange={(e) => {
+                  setLoginPassword(e.target.value);
+                }}
+              />
+              <button type="submit" className="register-button">
+                Sign in
+              </button>
+            </form>
+            <p
+              onClick={() => {
+                setHasAccount(false);
+              }}
+            >
+              Don't have an account?{" "}
+              <strong className="switch">Sign up here</strong>
+            </p>
+          </div>
+        ) : (
+          <div className="register-container">
+            <LogoIpsum className="logo" />
+
+            <h2>Welcome to Pragma!</h2>
+            <p>
+              Register to create your first account and start exploring the
+              blog:
+            </p>
+            <h2>Create an account:</h2>
+            <form onSubmit={register}>
+              <input
+                className="login-input"
+                placeholder="E-mail"
+                onChange={(e) => {
+                  setRegisterEmail(e.target.value);
+                }}
+              />
+              <input
+                type="password"
+                className="login-input"
+                placeholder="Password"
+                onChange={(e) => {
+                  setRegisterPassword(e.target.value);
+                }}
+              />
+
+              <button type="submit" className="register-button">
+                Register
+              </button>
+            </form>
+            <p
+              onClick={() => {
+                setHasAccount(true);
+              }}
+            >
+              Already have an account?{" "}
+              <strong className="switch">Sign in here</strong>
+            </p>
+          </div>
+        )}
+
+        {/*
+        <h2>Hello, {user?.email}</h2>
+        <h2>Hello again, {user?.displayName}</h2>*/}
+        <button onClick={logout}>Sign out</button>
+      </div>
+      <Footer />
     </div>
   );
 }

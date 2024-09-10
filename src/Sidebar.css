@@ -1,0 +1,42 @@
+.sidebar {
+  margin-left: 1.7rem;
+  width: 27%;
+  /* border: 1px solid aqua; */
+  display: inline-block;
+  vertical-align: top;
+}
+
+.sidebar h2 {
+  font-size: 1.3rem;
+}
+
+.newsletter-input {
+  all: unset;
+  width: 60%;
+  padding: 0;
+  padding-left: 5px;
+  height: 2.5em;
+  margin-bottom: 5%;
+  border-radius: 5px 0px 0px 5px;
+  border: solid green 1px;
+}
+
+.newsletter-submit {
+  all: unset;
+  border-radius: 0px 5px 5px 0px;
+  border-width: 1px;
+  height: 2.6em;
+  padding: 0 1em 0 1em;
+  background-color: green;
+  border-color: green;
+  font-weight: bold;
+  color: white;
+}
+
+.newsletter-submit:hover {
+  cursor: pointer;
+}
+
+.sidebar p {
+  font-size: 0.8rem;
+}
