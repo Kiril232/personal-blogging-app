@@ -6,7 +6,7 @@ import { LogOut } from "lucide-react";
 import { auth } from "./firebase.js";
 import { signOut } from "firebase/auth";
 
-export default function Header({ user, currPage }) {
+export default function Header({ user, isAdmin, currPage }) {
   const dropDownMenu = document.getElementsByClassName("user-menu");
   const logout = async () => {
     await signOut(auth);
@@ -39,7 +39,7 @@ export default function Header({ user, currPage }) {
           </div>
         </div>
         <hr />
-        <Navbar currPage={currPage} />
+        <Navbar currPage={currPage} isAdmin={isAdmin} />
       </div>
     );
   } else {
@@ -60,7 +60,7 @@ export default function Header({ user, currPage }) {
           </div>
         </div>
         <hr />
-        <Navbar currPage={currPage} />
+        <Navbar currPage={currPage} isAdmin={isAdmin} />
       </div>
     );
   }

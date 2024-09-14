@@ -21,13 +21,13 @@
 }
 
 .carousel img {
-  width: 65vh;
-  height: 55vh;
+  width: 45%;
+  height: 90%;
   object-fit: cover;
   border-radius: 10px;
   float: left;
   margin-left: 4rem;
-  margin-top: 1rem;
+  margin-top: 2%;
 }
 
 .right-button,

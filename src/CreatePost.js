@@ -5,26 +5,20 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import {
   collection,
   addDoc,
-  doc,
   query,
   getCountFromServer,
   where,
 } from "firebase/firestore";
-import {
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import { db, storage, auth } from "./firebase.js";
-// import ImageResize from "quill-image-resize";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { db, storage } from "./firebase.js";
+import ImageResize from "quill-image-resize";
 import VideoResize from "quill-video-resize-module";
 import { useNavigate } from "react-router-dom";
+import { sendEmail } from "./emailjs.js";
 import ProgressBar from "./ProgressBar";
 import "./CreatePost.css";
 
-// window.Quill = Quill;
-// Quill.register("modules/imageResize", ImageResize);
+Quill.register("modules/imageResize", ImageResize);
 Quill.register("modules/videoResize", VideoResize);
 
 export default function CreatePost({ user, isAdmin }) {
@@ -39,8 +33,8 @@ export default function CreatePost({ user, isAdmin }) {
   });
   const navigate = useNavigate();
   const docRef = collection(db, "posts");
-  const [coverImageInProgress, setCoverImageInProgress] = useState(false);
   const [imageInProgress, setImageInProgress] = useState(false);
+  const [submitInProgress, setSubmitInProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [coverURL, setCoverURL] = useState("");
 
@@ -56,7 +50,6 @@ export default function CreatePost({ user, isAdmin }) {
       where("category", "==", post.category)
     );
     const categorySnapshot = await getCountFromServer(q);
-    console.log("count: " + categorySnapshot.data().count);
     if (categorySnapshot.data().count === 0) {
       const newCategory = addDoc(collection(db, "categories"), {
         category: post.category,
@@ -64,12 +57,13 @@ export default function CreatePost({ user, isAdmin }) {
     }
     const imageRef = ref(storage, coverImg.current.name + new Date().getTime());
     const uploadTask = uploadBytesResumable(imageRef, coverImg.current);
+    setSubmitInProgress(true);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
         // Observe state change events such as progress, pause, and resume
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        // setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
       },
       // Handle unsuccessful uploads
       (error) => {
@@ -78,7 +72,10 @@ export default function CreatePost({ user, isAdmin }) {
       //handle successful finish
       () => {
         getDownloadURL(imageRef).then((url) => {
+          setSubmitInProgress(false);
+          setProgress(0);
           addDoc(docRef, { ...post, coverImage: url }).then(() => {
+            sendEmail({ ...post, coverImage: url });
             navigate("/post/" + post.slug);
           });
         });
@@ -88,7 +85,6 @@ export default function CreatePost({ user, isAdmin }) {
 
   const uploadToStorage = (image) => {
     setImageInProgress(true);
-    console.log(Quill.imports);
     const imageRef = ref(storage, image.name + new Date().getTime());
     // let imageURL = null;
     const uploadTask = uploadBytesResumable(imageRef, image);
@@ -152,22 +148,8 @@ export default function CreatePost({ user, isAdmin }) {
           image: handleImage,
         },
       },
-      imageResize: {
-        // handleStyles: {
-        //   backgroundColor: "black",
-        //   border: "none",
-        //   color: "white",
-        // },
-        // modules: ["Resize"],
-      },
-      videoResize: {
-        // handleStyles: {
-        //   backgroundColor: "black",
-        //   border: "none",
-        //   color: "white",
-        // },
-        // modules: ["Resize"],
-      },
+      imageResize: {},
+      videoResize: {},
     }),
     []
   );
@@ -190,7 +172,6 @@ export default function CreatePost({ user, isAdmin }) {
   const quillRef = useRef(null);
 
   function handleCoverInput(e) {
-    console.log(coverURL);
     const image = e.target.files && e.target.files[0];
     if (image) {
       coverImg.current = image;
@@ -207,7 +188,7 @@ export default function CreatePost({ user, isAdmin }) {
     return str
       .toLowerCase()
       .replace(/[^a-zA-Z0-9\s]/g, "")
-      .replace(/\s/g, "-");
+      .replace(/\s+/g, "-");
   }
 
   if (!isAdmin) {
@@ -215,7 +196,7 @@ export default function CreatePost({ user, isAdmin }) {
   } else {
     return (
       <div>
-        <Header user={user} />
+        <Header user={user} isAdmin={isAdmin} currPage={"write"} />
         <div className="create-post-container">
           <h1>Create Post</h1>
           <form onSubmit={handleSubmit}>
@@ -244,8 +225,8 @@ export default function CreatePost({ user, isAdmin }) {
                 placeholder="Enter category..."
               />
               <h2>Cover image:</h2>
-              <input onInput={handleCoverInput} type="file" />
-              <img src={coverURL} width="200" height="200" alt="cover image" />
+              <input required onInput={handleCoverInput} type="file" />
+              <img src={coverURL} className="cover-preview" alt="cover image" />
             </div>
             <hr />
             {imageInProgress && <ProgressBar progress={progress} />}
@@ -264,6 +245,7 @@ export default function CreatePost({ user, isAdmin }) {
             <button className="submit-button" type="submit">
               Submit
             </button>
+            {submitInProgress && <ProgressBar progress={progress} />}
           </form>
           <hr />
           <div

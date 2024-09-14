@@ -19,6 +19,7 @@ h6 {
 
 .post-info-container {
   margin-top: 1rem;
+  /* position: relative; */
   /* display: flex; */
 }
 
@@ -66,6 +67,10 @@ h6 {
   height: 2rem;
 }
 
+.like-icon:hover {
+  color: green;
+}
+
 .blogpost-container .comments {
   margin-top: 5px;
   height: 3rem;
@@ -79,4 +84,60 @@ h6 {
 
 .liked {
   color: green;
+}
+
+.comment-icon:hover {
+  color: gray;
+}
+
+.delete-confirmation {
+  width: 15%;
+  max-height: 0;
+  overflow: hidden;
+  height: 15%;
+  position: fixed;
+  left: 45%;
+  top: 45%;
+  border-radius: 5px;
+  background-color: #e1e5e5;
+  z-index: 1;
+  text-align: center;
+  transition: max-height 50ms ease;
+}
+
+.delete-confirmation-open {
+  padding: 5px;
+  border: solid gray 1px;
+  max-height: none;
+}
+
+.delete-confirmation p {
+  font-weight: bold;
+  margin: 0;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.delete-confirmation .submit-button {
+  margin: 0;
+  margin-top: 1.5rem;
+  width: 3rem;
+  height: 2rem;
+  background-color: whitesmoke;
+  background-image: linear-gradient(-180deg, white 0%, lightgray);
+  border: solid gray 1px;
+  color: black;
+  /* background-image: none; */
+}
+
+.delete-confirmation .confirm-buttons .delete {
+  /* background-color: crimson; */
+  /* background-image: none; */
+  background-image: linear-gradient(-180deg, red 0%, darkred);
+  /* border: solid black 1px; */
+  color: white;
 }

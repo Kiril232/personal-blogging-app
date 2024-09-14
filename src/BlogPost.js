@@ -1,4 +1,5 @@
-import { db, auth } from "./firebase";
+import { db, storage } from "./firebase";
+import { ref, deleteObject } from "firebase/storage";
 import {
   collection,
   doc,
@@ -16,7 +17,6 @@ import {
 } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
 import Header from "./Header";
 import Comments from "./Comments.js";
 import "./BlogPost.css";
@@ -90,7 +90,31 @@ export default function BlogPost({ user, isAdmin }) {
     navigate("/post/" + slug + "/edit");
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    //delete category if no other posts
+    const q = query(
+      collection(db, "categories"),
+      where("category", "==", postContent.category)
+    );
+    const categorySnapshot = await getCountFromServer(q);
+    if (categorySnapshot.data().count === 1) {
+      console.log("Successfully deleted category");
+      const deletedCategory = await getDocs(q);
+      deleteDoc(doc(db, "categories", deletedCategory.docs[0].id));
+    }
+    //delete cover image
+    const coverURL = postContent.coverImage
+      .substring(77, postContent.coverImage.indexOf("?", 77))
+      .replace(/%20/g, " ");
+    const coverRef = ref(storage, coverURL);
+    deleteObject(coverRef)
+      .then(() => {
+        console.log("Deleted the old cover image from storage successfully.");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    //delete post
     deleteDoc(doc(db, "posts", postId))
       .then(() => {
         console.log("Successfully deleted post.");
@@ -99,9 +123,25 @@ export default function BlogPost({ user, isAdmin }) {
       .catch((err) => {
         console.error(err);
       });
-
+    //delete comments
     comments.forEach((comment) => {
       deleteDoc(doc(db, "comments", comment.id));
+    });
+    //delete images from post content
+    const imgTags = postContent.content.match(/<img[^>]+>/g);
+    const imgUrls = imgTags.map((tag) => {
+      const url = tag.match(/src="([^"]+)"/);
+      return url[1];
+    });
+
+    imgUrls.forEach((url) => {
+      if (url) {
+        const storageUrl = url
+          .substring(77, url.indexOf("?", 77))
+          .replace(/%20/g, " ");
+        const imgRef = ref(storage, storageUrl);
+        deleteObject(imgRef);
+      }
     });
   };
 
@@ -148,7 +188,7 @@ export default function BlogPost({ user, isAdmin }) {
 
   return (
     <div>
-      <Header user={user} />
+      <Header user={user} isAdmin={isAdmin} />
       <div className="blogpost-container">
         <div className="title-container">
           <h1>{postContent.title}</h1>
@@ -157,7 +197,14 @@ export default function BlogPost({ user, isAdmin }) {
             <h6>Pragma</h6>
             <h6>SEP 06, 2024</h6>
             {isAdmin && (
-              <button onClick={handleDelete} className="delete-icon">
+              <button
+                onClick={() => {
+                  document
+                    .getElementsByClassName("delete-confirmation")[0]
+                    .classList.toggle("delete-confirmation-open");
+                }}
+                className="delete-icon"
+              >
                 <Trash2 />
               </button>
             )}
@@ -166,17 +213,32 @@ export default function BlogPost({ user, isAdmin }) {
                 <PenLine />
               </button>
             )}
+            <div className="delete-confirmation">
+              <p>Are you sure you want to delete this post?</p>
+              <div className="confirm-buttons">
+                <button className="submit-button delete" onClick={handleDelete}>
+                  Delete
+                </button>
+                <button
+                  className="submit-button"
+                  onClick={() => {
+                    document
+                      .getElementsByClassName("delete-confirmation")[0]
+                      .classList.toggle("delete-confirmation-open");
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <hr />
-        {/* {isAdmin && <button onClick={handleClick}>Edit post</button>} */}
-        {/* {isAdmin && <button onClick={handleDelete}>Delete post</button>} */}
         <div
           className="ql-editor ql-container editor-view"
           dangerouslySetInnerHTML={{ __html: postContent.content }}
         />
         <hr />
-        {/* <div className="post-icons"> */}
         {isLiked ? (
           <div className="likes liked">
             <ThumbsUp
@@ -188,20 +250,36 @@ export default function BlogPost({ user, isAdmin }) {
           </div>
         ) : (
           <div className="likes">
-            <ThumbsUp onClick={handleLike} className="like-icon" />
+            <ThumbsUp
+              onClick={user ? handleLike : () => navigate("/login")}
+              className="like-icon"
+            />
             <h6 className="count">{likeCount}</h6>
           </div>
         )}
         <div className="comments">
-          <MessageCircle className="comment-icon" />
+          <MessageCircle
+            onClick={
+              user
+                ? () => {
+                    const commentInput =
+                      document.getElementById("comment-input");
+                    commentInput.focus();
+                    commentInput.scrollIntoView();
+                  }
+                : () => navigate("/login")
+            }
+            className="comment-icon"
+          />
           <h6 className="count">{postContent.comments}</h6>
         </div>
         {/* </div> */}
+        <hr />
         <Comments
           comments={comments}
           handleComment={handleComment}
           setComment={setComment}
-          currUserPhoto={user.photoURL}
+          user={user}
         />
       </div>
 

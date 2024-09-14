@@ -1,5 +1,5 @@
 import "./Sidebar.css";
-import Input from "./Input.js";
+import Newsletter from "./Newsletter";
 
 export default function Sidebar() {
   return (
@@ -10,14 +10,7 @@ export default function Sidebar() {
         newsletter. Enter your email below to join the community and never miss
         an update.
       </p>
-      <input
-        placeholder="E-mail"
-        className="mainInput newsletter-input"
-        type="text"
-      />
-      <button type="submit" className="newsletter-submit">
-        Subscribe
-      </button>
+      <Newsletter />
     </div>
   );
 }

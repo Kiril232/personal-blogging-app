@@ -1,6 +1,6 @@
 import "./Navbar.css";
 
-export default function Navbar({ currPage }) {
+export default function Navbar({ currPage, isAdmin }) {
   return (
     <div>
       <div className="navbar">
@@ -31,6 +31,18 @@ export default function Navbar({ currPage }) {
         ) : (
           <a href="/about" className="navbar-link">
             <span className="navbar-item">About</span>
+          </a>
+        )}
+
+        {isAdmin && currPage === "write" && (
+          <a href="/create" className="navbar-link">
+            <span className="navbar-item curr-page">Write</span>
+          </a>
+        )}
+
+        {isAdmin && currPage !== "write" && (
+          <a href="/create" className="navbar-link">
+            <span className="navbar-item">Write</span>
           </a>
         )}
       </div>

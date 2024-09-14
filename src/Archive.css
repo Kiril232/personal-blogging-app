@@ -13,6 +13,14 @@
   padding-left: 1rem;
 }
 
+.archive-posts-container .container .post-text p {
+  font-size: 1rem;
+}
+
+.archive-posts-container .container .post-text a {
+  font-size: 1.3rem;
+}
+
 .archive-posts-container .container img {
   width: 35vh;
   margin-left: 4rem;
@@ -20,6 +28,22 @@
 
 .archive-posts-container .search-icon {
   display: none;
+}
+
+label {
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  width: 6rem;
+  margin-top: 5px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+label input {
+  margin: 0;
+  margin-left: 10px;
 }
 
 .archive-input {

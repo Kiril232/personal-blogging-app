@@ -42,15 +42,23 @@
   margin: 0 auto;
 }
 
+.cover-preview {
+  width: 35vh;
+  height: 23vh;
+}
+
+.formInput {
+  width: 50%;
+  height: 1.5rem;
+}
+
 form .submit-button {
   all: unset;
   margin-right: 1%;
   border-radius: 5px;
-  border-width: 1px;
   height: 2.6em;
   padding: 0 1em 0 1em;
-  background-color: green;
-  border-color: green;
+  background-image: linear-gradient(-180deg, green 0%, darkgreen);
   font-weight: bold;
   color: white;
   margin-left: 0;

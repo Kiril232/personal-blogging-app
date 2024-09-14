@@ -5,13 +5,15 @@ import { useState, useEffect } from "react";
 import "./Archive.css";
 import { Search } from "lucide-react";
 import { db } from "./firebase.js";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, getDoc, collection, doc } from "firebase/firestore";
 
 export default function Archive({ user, isAdmin }) {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [sortType, setSortType] = useState("dm");
+  const [likedOnly, setLikedOnly] = useState(false);
+  const [liked, setLiked] = useState([]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -24,9 +26,23 @@ export default function Archive({ user, isAdmin }) {
     });
   }, []);
 
+  useEffect(() => {
+    async function fetchLiked() {
+      const userRef = doc(db, "users", user.uid);
+      const likedSnapshot = await getDoc(userRef);
+      if (likedSnapshot.data().liked) {
+        setLiked(likedSnapshot.data().liked);
+      }
+    }
+
+    if (user) {
+      fetchLiked();
+    }
+  }, [user]);
+
   return (
     <div>
-      <Header user={user} currPage={"archive"} />
+      <Header user={user} isAdmin={isAdmin} currPage={"archive"} />
       <div className="archive-posts-container">
         <div className="archive-input-container">
           <Search className="archive-search" />
@@ -46,13 +62,14 @@ export default function Archive({ user, isAdmin }) {
             <option value={""}>All categories</option>
             {categories.map((doc) => {
               return (
-                <option value={doc.data().category}>
-                  {doc.data().category}
-                </option>
+                <>
+                  <option value={doc.data().category}>
+                    {doc.data().category}
+                  </option>
+                </>
               );
             })}
           </select>
-
           <select
             onChange={(e) => {
               setSortType(e.target.value);
@@ -63,11 +80,26 @@ export default function Archive({ user, isAdmin }) {
             <option value="ld">Likes - descending</option>
             <option value="la">Likes - ascending</option>
           </select>
+          {user && (
+            <label for="checkbox">
+              Liked only{" "}
+              <input
+                onChange={() => {
+                  console.log(liked);
+                  setLikedOnly(!likedOnly);
+                }}
+                checked={likedOnly}
+                id="checkbox"
+                type="checkbox"
+              />
+            </label>
+          )}
         </div>
         <Posts
           search={search.toLowerCase()}
           sorted={sortType}
           category={selectedCategory}
+          liked={likedOnly ? liked : undefined}
         />
       </div>
       <Footer />

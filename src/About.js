@@ -5,7 +5,7 @@ import Header from "./Header.js";
 export default function About({ user, isAdmin }) {
   return (
     <div className="about-container">
-      <Header user={user} currPage={"about"} />
+      <Header user={user} isAdmin={isAdmin} currPage={"about"} />
       <div className="about-content-container">
         <h2>About this blog</h2>
         <p>

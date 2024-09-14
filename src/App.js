@@ -18,7 +18,7 @@ import {
 } from "firebase/firestore";
 
 function App() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(auth.currentUser);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {

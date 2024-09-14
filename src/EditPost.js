@@ -1,4 +1,4 @@
-import { db, storage, auth } from "./firebase";
+import { db, storage } from "./firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -240,7 +240,7 @@ export default function EditPost({ user, isAdmin }) {
   } else {
     return (
       <div>
-        <Header user={user} />
+        <Header user={user} isAdmin={isAdmin} />
         <div className="create-post-container">
           {/* <button
             onClick={() => {

@@ -4,24 +4,28 @@ export default function Comments({
   comments,
   handleComment,
   setComment,
-  currUserPhoto,
+  user,
 }) {
   let currYear = new Date().getFullYear();
 
   return (
     <div className="comments-wrapper">
       <h2>Comments</h2>
-      <img src={currUserPhoto} className="comment-photo" />
-      <textarea
-        placeholder="Leave a comment..."
-        onChange={(e) => {
-          setComment(e.target.value);
-        }}
-      />
-      <button onClick={handleComment} className="submit-button">
-        Post
-      </button>
-
+      {user && (
+        <>
+          <img src={user.photoURL} className="comment-photo" />
+          <textarea
+            id="comment-input"
+            placeholder="Leave a comment..."
+            onChange={(e) => {
+              setComment(e.target.value);
+            }}
+          />
+          <button onClick={handleComment} className="submit-button">
+            Post
+          </button>
+        </>
+      )}
       <div className="comments-container">
         {comments.length > 0 ? (
           comments.map((doc) => {

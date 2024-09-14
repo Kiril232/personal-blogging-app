@@ -1,20 +1,19 @@
 import { auth, db } from "./firebase";
 import { ReactComponent as LogoIpsum } from "./logoipsum.svg";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import Register from "./Register";
 import {
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   signOut,
   signInWithEmailAndPassword,
-  updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { setDoc, doc } from "firebase/firestore";
 import "./Login.css";
+import GoogleLogin from "./GoogleLogin";
 
 export default function Login() {
   const [loginEmail, setLoginEmail] = useState("");
@@ -22,17 +21,8 @@ export default function Login() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerInProgress, setRegisterInProgress] = useState(false);
-  const [user, setUser] = useState({});
   const [hasAccount, setHasAccount] = useState(true);
   const navigate = useNavigate();
-  useEffect(() => {
-    console.log("Use effect called.");
-    const unsubscribe = onAuthStateChanged(auth, (currUser) => {
-      setUser(currUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const register = async (event) => {
     try {
@@ -111,6 +101,8 @@ export default function Login() {
                 Sign in
               </button>
             </form>
+            <p>or</p>
+            <GoogleLogin />
             <p
               onClick={() => {
                 setHasAccount(false);
@@ -129,6 +121,8 @@ export default function Login() {
               Register to create your first account and start exploring the
               blog:
             </p>
+            <GoogleLogin />
+            <p>or</p>
             <h2>Create an account:</h2>
             <form onSubmit={register}>
               <input
@@ -161,11 +155,6 @@ export default function Login() {
             </p>
           </div>
         )}
-
-        {/*
-        <h2>Hello, {user?.email}</h2>
-        <h2>Hello again, {user?.displayName}</h2>*/}
-        <button onClick={logout}>Sign out</button>
       </div>
       <Footer />
     </div>

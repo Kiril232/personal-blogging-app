@@ -1,18 +1,12 @@
 import "./Footer.css";
+import Newsletter from "./Newsletter";
 
 export default function Footer() {
   return (
     <div className="footer">
-      <div className="footer-newsletter">
-        <h3>Subscribe to the newsletter</h3>{" "}
-        <input
-          placeholder="E-mail"
-          className="mainInput newsletter-input"
-          type="text"
-        />
-        <button type="submit" className="newsletter-submit">
-          Subscribe
-        </button>
+      <div className="newsletter">
+        <h3>Subscribe to the newsletter</h3>
+        <Newsletter />
       </div>
       <div className="footer-links">
         <p>© 2024 Kiril Stojanovski</p>
