@@ -20,7 +20,7 @@ export default function Newsletter() {
   };
 
   return (
-    <form onSubmit={handleSubscribe}>
+    <form className="newsletter-container" onSubmit={handleSubscribe}>
       <input
         placeholder="E-mail"
         className="mainInput newsletter-input"

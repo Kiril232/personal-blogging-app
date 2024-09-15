@@ -1,5 +1,4 @@
 import Header from "./Header";
-import Input from "./Input";
 import Posts from "./Posts";
 import Footer from "./Footer.js";
 import Sidebar from "./Sidebar.js";

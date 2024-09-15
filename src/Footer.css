@@ -15,9 +15,7 @@
 }
 
 .footer .newsletter {
-  /* margin-right: 3rem; */
   width: 18rem;
-  /* border: solid blueviolet 1px; */
   display: inline-block;
 }
 
@@ -26,12 +24,26 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  /* border: solid red 1px; */
   height: 100%;
   width: 20rem;
-  margin-right: 20%;
+  margin-right: 19rem;
 }
 
 .footer p {
   margin-bottom: 0;
+}
+
+.footer h3 {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 970px) {
+  .footer {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .footer-links {
+    margin: 0;
+  }
 }

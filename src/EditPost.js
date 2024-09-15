@@ -10,17 +10,16 @@ import { addDoc, updateDoc, doc, getCountFromServer } from "firebase/firestore";
 import {
   ref,
   deleteObject,
-  uploadBytes,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
 import ImageResize from "quill-image-resize";
+import VideoResize from "quill-video-resize-module";
 import { useNavigate } from "react-router-dom";
 import ProgressBar from "./ProgressBar";
-import { onAuthStateChanged } from "firebase/auth";
 
-window.Quill = ReactQuill;
 Quill.register("modules/imageResize", ImageResize);
+Quill.register("modules/videoResize", VideoResize);
 
 export default function EditPost({ user, isAdmin }) {
   const [post, setPost] = useState({});
@@ -186,14 +185,8 @@ export default function EditPost({ user, isAdmin }) {
           image: handleImage,
         },
       },
-      imageResize: {
-        handleStyles: {
-          backgroundColor: "black",
-          border: "none",
-          color: "white",
-        },
-        modules: ["Resize"],
-      },
+      imageResize: {},
+      videoResize: {},
     }),
     []
   );

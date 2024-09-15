@@ -9,8 +9,13 @@
   width: 100%;
 }
 
+.archive-posts-container .pic {
+  padding-bottom: 2rem;
+}
+
 .archive-posts-container .container .post-text {
   padding-left: 1rem;
+  width: 30rem;
 }
 
 .archive-posts-container .container .post-text p {
@@ -22,8 +27,9 @@
 }
 
 .archive-posts-container .container img {
-  width: 35vh;
-  margin-left: 4rem;
+  width: 17.5rem;
+  height: 9rem;
+  margin-left: 20rem;
 }
 
 .archive-posts-container .search-icon {
@@ -48,13 +54,11 @@ label input {
 
 .archive-input {
   all: unset;
-  width: 30%;
+  width: 17rem;
   height: 1.5rem;
   display: inline-block;
-  /* border: solid lightgray 1px; */
   border-radius: 5px;
   padding: 5px 5px 5px 5px;
-  /* text-align: center; */
 }
 
 .archive-input:focus {
@@ -63,31 +67,79 @@ label input {
 
 .archive-input-container {
   margin: 1rem 5%;
-  /* border: solid red 1px; */
   display: flex;
   justify-content: space-between;
   width: 90%;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .archive-search {
-  /* border: solid black 1px; */
   margin-top: 0.3rem;
   margin-right: 10px;
   float: left;
 }
 
 select {
-  /* appearance: none; */
-  width: 30%;
+  width: 15rem;
   padding: 5px 10px;
   background-color: white;
   border: 1px solid lightgray;
   border-radius: 0.25rem;
   color: #363737;
   cursor: pointer;
+  margin-left: 0.5rem;
 }
 
 select:focus {
   outline: 2px solid green;
+}
+
+@media (max-width: 970px) {
+  .archive-posts-container .container .post-text {
+    width: 21rem;
+  }
+
+  .archive-posts-container {
+    font-size: 0.7rem;
+  }
+
+  .archive-posts-container h2 a {
+    font-size: 1rem !important;
+  }
+
+  .archive-posts-container p {
+    font-size: 0.9rem !important;
+  }
+
+  .archive-posts-container .container img {
+    margin: 0;
+    margin-top: 1rem;
+    width: 12rem;
+    height: 8rem;
+  }
+}
+
+@media (max-width: 830px) {
+  .archive-posts-container .container .post-text {
+    width: 21rem;
+  }
+
+  .archive-posts-container {
+    font-size: 0.4rem;
+  }
+
+  .archive-posts-container h2 a {
+    font-size: 1rem !important;
+  }
+
+  .archive-posts-container p {
+    font-size: 0.9rem !important;
+  }
+
+  .archive-posts-container .container img {
+    margin: 0;
+    margin-top: 1rem;
+    width: 12rem;
+    height: 8rem;
+  }
 }

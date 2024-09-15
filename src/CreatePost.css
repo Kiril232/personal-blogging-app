@@ -1,5 +1,9 @@
 .quill {
-  margin: 10px 0;
+  margin: 0.6rem 0;
+}
+
+.ql-container {
+  font-size: 0.85rem;
 }
 
 .quill iframe {
@@ -12,13 +16,12 @@
 .ql-container .ql-editor h4,
 .ql-container .ql-editor h5,
 .ql-container .ql-editor h6 {
-  /* word-wrap:break-word; */
   overflow-wrap: anywhere;
 }
 
 .editor-view {
-  margin: 10px 0 10px 0;
-  font-size: 13px;
+  margin: 0.6rem 0;
+  font-size: 0.85rem;
 }
 
 .editor-view h1 {
@@ -27,7 +30,6 @@
 }
 
 .form-container {
-  /* border: solid red 1px; */
   margin-left: 2rem;
   margin-bottom: 1rem;
 }
@@ -43,21 +45,60 @@
 }
 
 .cover-preview {
-  width: 35vh;
-  height: 23vh;
+  width: 15rem;
+  height: 12rem;
 }
 
 .formInput {
-  width: 50%;
+  width: 30rem;
   height: 1.5rem;
+  border-radius: 5px;
+  border-width: 1px;
+}
+
+.formInput:focus {
+  outline: solid green 1px;
+}
+
+button:hover .ql-stroke,
+.ql-picker-label:hover .ql-stroke {
+  fill: none;
+  stroke: green !important;
+}
+
+.ql-snow.ql-toolbar .ql-picker-label.ql-active {
+  color: green !important;
+}
+
+.ql-snow.ql-toolbar .ql-picker-label:hover {
+  color: green !important;
+}
+
+.ql-snow.ql-toolbar .ql-picker-item:hover {
+  color: green !important;
+}
+
+.ql-active .ql-stroke {
+  fill: none;
+  stroke: green !important;
+}
+
+button:hover .ql-fill,
+.ql-picker-label:hover .ql-fill {
+  fill: green !important;
+  stroke: none;
+}
+
+.ql-active .ql-fill {
+  fill: green !important;
+  stroke: none;
 }
 
 form .submit-button {
   all: unset;
-  margin-right: 1%;
   border-radius: 5px;
-  height: 2.6em;
-  padding: 0 1em 0 1em;
+  height: 2.6rem;
+  padding: 0 1rem 0 1rem;
   background-image: linear-gradient(-180deg, green 0%, darkgreen);
   font-weight: bold;
   color: white;

@@ -8,7 +8,6 @@
 
 .about-container {
   min-height: 100vh;
-  /* border: solid red 5px; */
   display: flex;
   flex-direction: column;
 }
