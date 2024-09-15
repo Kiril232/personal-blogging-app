@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/personal-blogging-app/static/css/main.d7d31aaf.css",
+    "main.js": "/personal-blogging-app/static/js/main.ea6aa4f7.js",
+    "static/media/logoipsum.svg": "/personal-blogging-app/static/media/logoipsum.8a42a3dc4d5f2cee8a3bb5146e2469f4.svg",
+    "index.html": "/personal-blogging-app/index.html",
+    "main.d7d31aaf.css.map": "/personal-blogging-app/static/css/main.d7d31aaf.css.map",
+    "main.ea6aa4f7.js.map": "/personal-blogging-app/static/js/main.ea6aa4f7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d7d31aaf.css",
+    "static/js/main.ea6aa4f7.js"
+  ]
+}
