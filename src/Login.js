@@ -7,7 +7,6 @@ import Footer from "./Footer";
 import Register from "./Register";
 import {
   createUserWithEmailAndPassword,
-  signOut,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -44,18 +43,10 @@ export default function Login() {
     }
   };
 
-  const logout = async () => {
-    await signOut(auth);
-  };
-
   const login = async (event) => {
     try {
       event.preventDefault();
-      const user = await signInWithEmailAndPassword(
-        auth,
-        loginEmail,
-        loginPassword
-      );
+      await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       navigate("/");
     } catch (err) {
       console.log(err.message);

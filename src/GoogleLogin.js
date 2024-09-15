@@ -1,5 +1,5 @@
 import { db, auth, googleProvider } from "./firebase";
-import { signInWithPopup, updateProfile } from "firebase/auth";
+import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import {
   doc,
@@ -27,7 +27,7 @@ export default function GoogleLogin() {
         navigate("/");
       })
       .catch((err) => {
-        alert("error");
+        console.log(err);
       });
   };
   return (

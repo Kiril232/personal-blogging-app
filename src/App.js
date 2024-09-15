@@ -2,7 +2,6 @@ import Home from "./Home";
 import CreatePost from "./CreatePost";
 import BlogPost from "./BlogPost";
 import Login from "./Login";
-import Register from "./Register";
 import EditPost from "./EditPost";
 import Archive from "./Archive";
 import About from "./About";

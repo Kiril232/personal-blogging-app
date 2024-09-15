@@ -25,13 +25,11 @@ export default function EditPost({ user, isAdmin }) {
   const [post, setPost] = useState({});
   let { slug } = useParams();
   const navigate = useNavigate();
-  const [coverImageInProgress, setCoverImageInProgress] = useState(false);
   const [imageInProgress, setImageInProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const [coverURL, setCoverURL] = useState("");
   const [postId, setPostId] = useState("");
   const coverImg = useRef(null);
-  let docRef;
   const quillRef = useRef(null);
 
   useEffect(() => {
@@ -39,11 +37,8 @@ export default function EditPost({ user, isAdmin }) {
       const q = query(collection(db, "posts"), where("slug", "==", slug));
       const doc = await getDocs(q);
       setPost(doc.docs[0].data());
-      // console.log("POST:");
-      // console.log(doc.docs[0].data());
       setPostId(doc.docs[0].id);
       setCoverURL(doc.docs[0].data().coverImage);
-      //   docRef = collection(db, "posts", doc.docs[0].id);
     };
 
     fetchData();
@@ -86,7 +81,7 @@ export default function EditPost({ user, isAdmin }) {
     const categorySnapshot = await getCountFromServer(q);
     console.log("count: " + categorySnapshot.data().count);
     if (categorySnapshot.data().count === 0) {
-      const newCategory = addDoc(collection(db, "categories"), {
+      addDoc(collection(db, "categories"), {
         category: post.category,
       });
     }
@@ -276,7 +271,7 @@ export default function EditPost({ user, isAdmin }) {
               />
               <h2>Cover image:</h2>
               <input onInput={handleCoverInput} type="file" />
-              <img src={coverURL} width="200" height="200" alt="cover image" />
+              <img src={coverURL} width="200" height="200" alt="cover" />
             </div>
             <hr />
             {imageInProgress && <ProgressBar progress={progress} />}

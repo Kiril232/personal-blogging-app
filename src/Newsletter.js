@@ -13,7 +13,7 @@ export default function Newsletter() {
       setEmail("");
       return;
     }
-    const newEmail = addDoc(collection(db, "subscribers"), {
+    addDoc(collection(db, "subscribers"), {
       email: email,
     });
     setEmail("");

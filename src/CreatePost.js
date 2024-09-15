@@ -1,7 +1,7 @@
 import Header from "./Header.js";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef } from "react";
 import {
   collection,
   addDoc,
@@ -51,7 +51,7 @@ export default function CreatePost({ user, isAdmin }) {
     );
     const categorySnapshot = await getCountFromServer(q);
     if (categorySnapshot.data().count === 0) {
-      const newCategory = addDoc(collection(db, "categories"), {
+      addDoc(collection(db, "categories"), {
         category: post.category,
       });
     }
@@ -226,7 +226,7 @@ export default function CreatePost({ user, isAdmin }) {
               />
               <h2>Cover image:</h2>
               <input required onInput={handleCoverInput} type="file" />
-              <img src={coverURL} className="cover-preview" alt="cover image" />
+              <img src={coverURL} className="cover-preview" alt="cover" />
             </div>
             <hr />
             {imageInProgress && <ProgressBar progress={progress} />}

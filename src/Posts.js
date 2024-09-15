@@ -28,8 +28,8 @@ export default function Posts({ sorted, search, category, liked }) {
     return (
       <>
         <Carousel
-          posts={posts
-            .toSorted((a, b) => {
+          posts={[...posts]
+            .sort((a, b) => {
               return b.data().likes - a.data().likes;
             })
             .slice(0, 3)}
@@ -65,8 +65,8 @@ export default function Posts({ sorted, search, category, liked }) {
         <div className="container">
           <Search className="search-icon" />
           {posts.length > 0 ? (
-            posts
-              .toSorted((a, b) => {
+            [...posts]
+              .sort((a, b) => {
                 return (
                   new Date(a.data().date).getTime() -
                   new Date(b.data().date).getTime()
@@ -93,8 +93,8 @@ export default function Posts({ sorted, search, category, liked }) {
         <hr />
         <div className="container">
           {posts.length > 0 ? (
-            posts
-              .toSorted((a, b) => {
+            [...posts]
+              .sort((a, b) => {
                 return (
                   new Date(b.data().date).getTime() -
                   new Date(a.data().date).getTime()
@@ -120,8 +120,8 @@ export default function Posts({ sorted, search, category, liked }) {
       <>
         <div className="container">
           {posts.length > 0 ? (
-            posts
-              .toSorted((a, b) => {
+            [...posts]
+              .sort((a, b) => {
                 return b.data().likes - a.data().likes;
               })
               .map((doc) => {
@@ -145,8 +145,8 @@ export default function Posts({ sorted, search, category, liked }) {
         <hr />
         <div className="container">
           {posts.length > 0 ? (
-            posts
-              .toSorted((a, b) => {
+            [...posts]
+              .sort((a, b) => {
                 return a.data().likes - b.data().likes;
               })
               .map((doc) => {
