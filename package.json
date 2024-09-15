@@ -4,13 +4,9 @@
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "dotenv": "^16.4.5",
     "firebase": "^10.12.4",
     "lucide-react": "^0.439.0",
-    "node-polyfill-webpack-plugin": "^4.0.0",
     "quill-image-resize": "^3.0.9",
     "quill-video-resize-module": "^1.0.2",
     "react": "^18.3.1",
