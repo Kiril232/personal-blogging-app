@@ -20,7 +20,6 @@ export default function Posts({ sorted, search, category, liked }) {
 
     fetchPosts().then(() => {
       console.log("Successfully fetched posts.");
-      console.log("VALUE - " + liked);
     });
   }, []);
 

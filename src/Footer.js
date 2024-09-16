@@ -1,5 +1,6 @@
 import "./Footer.css";
 import Newsletter from "./Newsletter";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -10,9 +11,9 @@ export default function Footer() {
       </div>
       <div className="footer-links">
         <p>© 2024 Kiril Stojanovski</p>
-        <a href="/">Home</a>
-        <a href="/archive">Archive</a>
-        <a href="/about">About</a>
+        <Link to="/">Home</Link>
+        <Link to="/archive">Archive</Link>
+        <Link to="/about">About</Link>
       </div>
     </div>
   );

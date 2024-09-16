@@ -45,10 +45,8 @@ export default function EditPost({ user, isAdmin }) {
   }, []);
 
   const handleSubmit = async (e) => {
-    console.log(post);
     e.preventDefault();
     if (!coverImg.current) {
-      console.log("UPDATING WITHOUT COVER IMAGE");
       updateDoc(doc(db, "posts", postId), {
         category: post.category,
         content: post.content,
@@ -59,27 +57,20 @@ export default function EditPost({ user, isAdmin }) {
       });
       return;
     }
-    console.log("UPDATING WITH COVER IMAGE");
-    //delete the old cover image https://firebasestorage.googleapis.com/v0/b/personal-blog-2332.appspot.com/o/Screenshot%202024-06-19%20232719.png1720953543527?alt=media&token=9d3c4d84-1a1b-4953-a47f-04ad231779ef
 
     const oldCoverURL = post.coverImage
       .substring(77, post.coverImage.indexOf("?", 77))
       .replace(/%20/g, " ");
     const oldCoverRef = ref(storage, oldCoverURL);
-    deleteObject(oldCoverRef)
-      .then(() => {
-        console.log("Deleted the old cover image from storage successfully.");
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    deleteObject(oldCoverRef).catch((err) => {
+      console.error(err);
+    });
 
     const q = query(
       collection(db, "categories"),
       where("category", "==", post.category)
     );
     const categorySnapshot = await getCountFromServer(q);
-    console.log("count: " + categorySnapshot.data().count);
     if (categorySnapshot.data().count === 0) {
       addDoc(collection(db, "categories"), {
         category: post.category,
@@ -203,7 +194,6 @@ export default function EditPost({ user, isAdmin }) {
   ];
 
   function handleCoverInput(e) {
-    console.log(coverURL);
     const image = e.target.files && e.target.files[0];
     if (image) {
       coverImg.current = image;
@@ -230,17 +220,6 @@ export default function EditPost({ user, isAdmin }) {
       <div>
         <Header user={user} isAdmin={isAdmin} />
         <div className="create-post-container">
-          {/* <button
-            onClick={() => {
-              console.log(post);
-              const oldCoverURL = post.coverImage
-                .substring(77, post.coverImage.indexOf("?", 77))
-                .replace(/%20/g, " ");
-              console.log(oldCoverURL);
-            }}
-          >
-            log the post state
-          </button> */}
           <h1>Edit Post </h1>
           <form onSubmit={handleSubmit}>
             <div className="form-container">
@@ -283,7 +262,6 @@ export default function EditPost({ user, isAdmin }) {
               theme="snow"
               onChange={(HTMLcontent) => {
                 if (post.content) {
-                  console.log(post);
                   setPost({ ...post, content: HTMLcontent });
                 }
               }}

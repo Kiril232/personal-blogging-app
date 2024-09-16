@@ -12,7 +12,6 @@ export default function Register() {
   const navigate = useNavigate();
 
   function handleProfileInput(e) {
-    console.log(profilePhotoURL);
     const photo = e.target.files && e.target.files[0];
     if (profilePhotoURL.length !== 0) {
       URL.revokeObjectURL(profilePhotoURL);

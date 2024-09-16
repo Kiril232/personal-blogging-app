@@ -37,7 +37,6 @@ export default function Carousel({ posts }) {
     return (
       <div className="carousel">
         <button onClick={handlePrev} className="left-button">
-          {/* <FontAwesomeIcon className="arrow-icon" icon={faChevronLeft} /> */}
           <ChevronLeft className="arrow-icon" />
         </button>
         <div
@@ -57,7 +56,6 @@ export default function Carousel({ posts }) {
                   {posts[0].data().title}
                 </Link>
               </h2>
-              {/*<p>{stripHTML(doc.data().content.replace("<br>", ' ').replace("</p>", ' ')).substring(0,50)}...</p>*/}
               <p>
                 {posts[0]
                   .data()
@@ -102,7 +100,6 @@ export default function Carousel({ posts }) {
                   {posts[1].data().title}
                 </Link>
               </h2>
-              {/*<p>{stripHTML(doc.data().content.replace("<br>", ' ').replace("</p>", ' ')).substring(0,50)}...</p>*/}
               <p>
                 {posts[1]
                   .data()
@@ -147,7 +144,6 @@ export default function Carousel({ posts }) {
                   {posts[2].data().title}
                 </Link>
               </h2>
-              {/*<p>{stripHTML(doc.data().content.replace("<br>", ' ').replace("</p>", ' ')).substring(0,50)}...</p>*/}
               <p>
                 {posts[2]
                   .data()
@@ -180,7 +176,6 @@ export default function Carousel({ posts }) {
           </div>
         </div>
         <button onClick={handleNext} className="right-button">
-          {/* <FontAwesomeIcon className="arrow-icon" icon={faChevronRight} /> */}
           <ChevronRight className="arrow-icon" />
         </button>
       </div>

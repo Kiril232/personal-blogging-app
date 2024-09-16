@@ -14,7 +14,7 @@ export default function PostCard({ post }) {
 
   return (
     <div key={post.id} className="pic">
-      <a className="link" href={"/post/" + post.data().slug}></a>
+      <Link className="link" to={"/post/" + post.data().slug}></Link>
 
       <div className="post-text">
         <h2>

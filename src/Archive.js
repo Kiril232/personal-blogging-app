@@ -85,7 +85,6 @@ export default function Archive({ user, isAdmin }) {
               Liked only{" "}
               <input
                 onChange={() => {
-                  console.log(liked);
                   setLikedOnly(!likedOnly);
                 }}
                 checked={likedOnly}

@@ -5,7 +5,7 @@ import Login from "./Login";
 import EditPost from "./EditPost";
 import Archive from "./Archive";
 import About from "./About";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "./firebase";
@@ -40,32 +40,27 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home user={user} isAdmin={isAdmin} />} />
-        <Route
-          path="/create"
-          element={<CreatePost user={user} isAdmin={isAdmin} />}
-        />
-        <Route
-          path="/archive"
-          element={<Archive user={user} isAdmin={isAdmin} />}
-        />
-        <Route
-          path="/about"
-          element={<About user={user} isAdmin={isAdmin} />}
-        />
-        <Route
-          path="/post/:slug"
-          element={<BlogPost user={user} isAdmin={isAdmin} />}
-        />
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/post/:slug/edit"
-          element={<EditPost user={user} isAdmin={isAdmin} />}
-        />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Home user={user} isAdmin={isAdmin} />} />
+      <Route
+        path="/create"
+        element={<CreatePost user={user} isAdmin={isAdmin} />}
+      />
+      <Route
+        path="/archive"
+        element={<Archive user={user} isAdmin={isAdmin} />}
+      />
+      <Route path="/about" element={<About user={user} isAdmin={isAdmin} />} />
+      <Route
+        path="/post/:slug"
+        element={<BlogPost user={user} isAdmin={isAdmin} />}
+      />
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/post/:slug/edit"
+        element={<EditPost user={user} isAdmin={isAdmin} />}
+      />
+    </Routes>
   );
 }
 

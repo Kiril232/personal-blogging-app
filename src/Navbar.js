@@ -1,49 +1,50 @@
 import "./Navbar.css";
+import { Link } from "react-router-dom";
 
 export default function Navbar({ currPage, isAdmin }) {
   return (
     <div>
       <div className="navbar">
         {currPage === "home" ? (
-          <a href="/" className="navbar-link">
+          <Link to="/" className="navbar-link">
             <span className="navbar-item curr-page">Home</span>
-          </a>
+          </Link>
         ) : (
-          <a href="/" className="navbar-link">
+          <Link to="/" className="navbar-link">
             <span className="navbar-item">Home</span>
-          </a>
+          </Link>
         )}
 
         {currPage === "archive" ? (
-          <a href="/archive" className="navbar-link">
+          <Link to="/archive" className="navbar-link">
             <span className="navbar-item curr-page">Archive</span>
-          </a>
+          </Link>
         ) : (
-          <a href="/archive" className="navbar-link">
+          <Link to="/archive" className="navbar-link">
             <span className="navbar-item">Archive</span>
-          </a>
+          </Link>
         )}
 
         {currPage === "about" ? (
-          <a href="/about" className="navbar-link">
+          <Link to="/about" className="navbar-link">
             <span className="navbar-item curr-page">About</span>
-          </a>
+          </Link>
         ) : (
-          <a href="/about" className="navbar-link">
+          <Link to="/about" className="navbar-link">
             <span className="navbar-item">About</span>
-          </a>
+          </Link>
         )}
 
         {isAdmin && currPage === "write" && (
-          <a href="/create" className="navbar-link">
+          <Link to="/create" className="navbar-link">
             <span className="navbar-item curr-page">Write</span>
-          </a>
+          </Link>
         )}
 
         {isAdmin && currPage !== "write" && (
-          <a href="/create" className="navbar-link">
+          <Link to="/create" className="navbar-link">
             <span className="navbar-item">Write</span>
-          </a>
+          </Link>
         )}
       </div>
       <hr />

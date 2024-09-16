@@ -27,13 +27,11 @@ import { Trash2, PenLine, ThumbsUp, MessageCircle } from "lucide-react";
 export default function BlogPost({ user, isAdmin }) {
   const post = useRef(null);
   const [postId, setPostId] = useState("");
-  // const [text, setText] = useState("");
   const [postContent, setPostContent] = useState({});
   let { slug } = useParams();
   const navigate = useNavigate();
 
   const [comment, setComment] = useState("");
-  // const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -42,7 +40,6 @@ export default function BlogPost({ user, isAdmin }) {
     const fetchData = async () => {
       const q = query(collection(db, "posts"), where("slug", "==", slug));
       post.current = await getDocs(q);
-      console.log(post.current.docs[0].data());
       setPostContent(post.current.docs[0].data());
       setPostId(post.current.docs[0].id);
     };
@@ -55,10 +52,6 @@ export default function BlogPost({ user, isAdmin }) {
 
     fetchData();
     fetchComments();
-
-    return () => {
-      // unsubscribe();
-    };
   }, []);
 
   useEffect(() => {
@@ -67,7 +60,6 @@ export default function BlogPost({ user, isAdmin }) {
       const userRef = doc(db, "users", user.uid);
       unsubscribeUser = onSnapshot(userRef, (doc) => {
         if (doc.exists()) {
-          // const likedPosts = doc.data().liked;
           setIsLiked(doc.data().liked.includes(postId));
         }
       });
@@ -98,7 +90,6 @@ export default function BlogPost({ user, isAdmin }) {
     );
     const categorySnapshot = await getCountFromServer(q);
     if (categorySnapshot.data().count === 1) {
-      console.log("Successfully deleted category");
       const deletedCategory = await getDocs(q);
       deleteDoc(doc(db, "categories", deletedCategory.docs[0].id));
     }
@@ -108,16 +99,13 @@ export default function BlogPost({ user, isAdmin }) {
       .replace(/%20/g, " ");
     const coverRef = ref(storage, coverURL);
     deleteObject(coverRef)
-      .then(() => {
-        console.log("Deleted the old cover image from storage successfully.");
-      })
+      .then(() => {})
       .catch((err) => {
         console.error(err);
       });
     //delete post
     deleteDoc(doc(db, "posts", postId))
       .then(() => {
-        console.log("Successfully deleted post.");
         navigate("/");
       })
       .catch((err) => {
@@ -127,6 +115,7 @@ export default function BlogPost({ user, isAdmin }) {
     comments.forEach((comment) => {
       deleteDoc(doc(db, "comments", comment.id));
     });
+
     //delete images from post content
     const imgTags = postContent.content.match(/<img[^>]+>/g);
     const imgUrls = imgTags.map((tag) => {
@@ -195,7 +184,16 @@ export default function BlogPost({ user, isAdmin }) {
           <div className="post-info-container">
             <LogoIpsum className="post-logo" />
             <h6>Pragma</h6>
-            <h6>SEP 06, 2024</h6>
+            <h6>
+              {" "}
+              {new Date(postContent.date).toLocaleString("default", {
+                month: "short",
+              }) +
+                " " +
+                new Date(postContent.date).getDate() +
+                ", " +
+                new Date(postContent.date).getFullYear()}
+            </h6>
             {isAdmin && (
               <button
                 onClick={() => {
@@ -273,7 +271,6 @@ export default function BlogPost({ user, isAdmin }) {
           />
           <h6 className="count">{postContent.comments}</h6>
         </div>
-        {/* </div> */}
         <hr />
         <Comments
           comments={comments}
