@@ -41,7 +41,7 @@ export default function Archive({ user, isAdmin }) {
   }, [user]);
 
   return (
-    <div>
+    <div className="archive-container">
       <Header user={user} isAdmin={isAdmin} currPage={"archive"} />
       <div className="archive-posts-container">
         <div className="archive-input-container">

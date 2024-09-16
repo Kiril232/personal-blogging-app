@@ -3,6 +3,7 @@
   width: 68vw;
   margin: 0 auto;
   font-size: 1.1rem;
+  flex: 1;
 }
 
 .archive-posts-container .container {
@@ -50,6 +51,12 @@ label {
 label input {
   margin: 0;
   margin-left: 10px;
+}
+
+.archive-container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
 .archive-input {

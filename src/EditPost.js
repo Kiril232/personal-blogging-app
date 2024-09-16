@@ -157,6 +157,8 @@ export default function EditPost({ user, isAdmin }) {
         container: [
           [{ header: [1, 2, false] }],
           ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ align: [] }],
+          ["code-block"],
           [
             { list: "ordered" },
             { list: "bullet" },
@@ -191,6 +193,8 @@ export default function EditPost({ user, isAdmin }) {
     "image",
     "width",
     "video",
+    "align",
+    "code-block",
   ];
 
   function handleCoverInput(e) {

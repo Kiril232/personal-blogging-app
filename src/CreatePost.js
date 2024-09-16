@@ -134,6 +134,8 @@ export default function CreatePost({ user, isAdmin }) {
         container: [
           [{ header: [1, 2, false] }],
           ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ align: [] }],
+          ["code-block"],
           [
             { list: "ordered" },
             { list: "bullet" },
@@ -167,6 +169,8 @@ export default function CreatePost({ user, isAdmin }) {
     "link",
     "image",
     "video",
+    "align",
+    "code-block",
   ];
 
   const quillRef = useRef(null);

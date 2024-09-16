@@ -1,9 +1,12 @@
 .quill {
-  margin: 0.6rem 0;
+  margin: 0.6rem auto;
+  width: 55vw;
 }
 
 .ql-container {
-  font-size: 0.85rem;
+  width: 55vw;
+  font-size: 1.1rem;
+  margin: 0 auto;
 }
 
 .quill iframe {
@@ -19,9 +22,16 @@
   overflow-wrap: anywhere;
 }
 
+pre.ql-syntax {
+  background-color: #23241f;
+  color: #f8f8f2;
+  border-radius: 5px;
+  padding: 5px;
+}
+
 .editor-view {
-  margin: 0.6rem 0;
-  font-size: 0.85rem;
+  margin: 0.6rem auto;
+  font-size: 1.1rem;
 }
 
 .editor-view h1 {
@@ -102,8 +112,7 @@ form .submit-button {
   background-image: linear-gradient(-180deg, green 0%, darkgreen);
   font-weight: bold;
   color: white;
-  margin-left: 0;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 6.5rem;
 }
 
 .submit-button:hover {

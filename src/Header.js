@@ -18,7 +18,7 @@ export default function Header({ user, isAdmin, currPage }) {
       <div className="header-container">
         <div className="header">
           <LogoIpsum className="logo" />
-          <h1>Pragma.</h1>
+          <h1>Blog</h1>
           <div className="user-container">
             {user.displayName ? (
               <p className="hello-msg">{user.displayName}</p>
@@ -47,7 +47,7 @@ export default function Header({ user, isAdmin, currPage }) {
       <div className="header-container">
         <div className="header">
           <LogoIpsum className="logo" />
-          <h1>Pragma.</h1>
+          <h1>Blog</h1>
           <div className="button-wrapper">
             <button
               onClick={() => {

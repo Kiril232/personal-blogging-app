@@ -183,7 +183,7 @@ export default function BlogPost({ user, isAdmin }) {
           <h1>{postContent.title}</h1>
           <div className="post-info-container">
             <LogoIpsum className="post-logo" />
-            <h6>Pragma</h6>
+            <h6>Kiril Stojanovski</h6>
             <h6>
               {" "}
               {new Date(postContent.date).toLocaleString("default", {
