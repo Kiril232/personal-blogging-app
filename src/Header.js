@@ -10,6 +10,7 @@ export default function Header({ user, isAdmin, currPage }) {
   const dropDownMenu = document.getElementsByClassName("user-menu");
   const logout = async () => {
     await signOut(auth);
+    window.location.reload();
   };
   const navigate = useNavigate();
 
@@ -20,11 +21,11 @@ export default function Header({ user, isAdmin, currPage }) {
           <LogoIpsum className="logo" />
           <h1>Blog</h1>
           <div className="user-container">
-            {user.displayName ? (
+            {/* {user.displayName ? (
               <p className="hello-msg">{user.displayName}</p>
             ) : (
               <p className="hello-msg-email">{user.email}</p>
-            )}
+            )} */}
             <img
               onClick={() => {
                 dropDownMenu[0].classList.toggle("user-menu-open");

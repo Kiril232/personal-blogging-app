@@ -29,7 +29,7 @@ export default function Login() {
       await createUserWithEmailAndPassword(
         auth,
         registerEmail,
-        registerPassword
+        registerPassword,
       ).then((newUser) => {
         setDoc(doc(db, "users", newUser.user.uid), {
           email: newUser.user.email,
@@ -70,7 +70,7 @@ export default function Login() {
         {hasAccount ? (
           <div className="register-container">
             <LogoIpsum className="logo" />
-            <h2>Welcome to Pragma!</h2>
+            <h2>Welcome to Quire!</h2>
             <p>If you have an account, enter your details to sign in:</p>
             <form onSubmit={login}>
               <input
@@ -107,7 +107,7 @@ export default function Login() {
           <div className="register-container">
             <LogoIpsum className="logo" />
 
-            <h2>Welcome to Pragma!</h2>
+            <h2>Welcome to Quire!</h2>
             <p>
               Register to create your first account and start exploring the
               blog:

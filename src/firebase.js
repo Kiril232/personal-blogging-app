@@ -1,10 +1,7 @@
 import { initializeApp } from "firebase/app";
-// import dotenv from 'dotenv'
 import { getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-
-// dotenv.config();
 
 const firebaseConfig = {
   apiKey: "AIzaSyCPFJTWkjb8NpQWHm55R4vL26DZaXlHqxA",

@@ -54,7 +54,7 @@ export default function Register() {
               navigate("/");
             });
           });
-        }
+        },
       );
     } else {
       updateProfile(auth.currentUser, {
@@ -71,7 +71,7 @@ export default function Register() {
     <div className="auth-content-container">
       <div className="reigster-container"></div>
       <LogoIpsum className="logo" />
-      <h2>Welcome to Pragma!</h2>
+      <h2>Welcome to Quire!</h2>
       <p>One more step before we finish your registration...</p>
       <h3>Choose your username:</h3>
       <input
